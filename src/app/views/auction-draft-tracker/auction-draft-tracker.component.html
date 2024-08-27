@@ -1,0 +1,100 @@
+<mat-tab-group>
+  <mat-tab label="My Team">
+    <div class="p-4">
+      <h2 class="text-xl font-bold mb-4">My Team Budget</h2>
+      <div class="grid grid-cols-2 gap-4 mb-4">
+        <div>
+          <p>Total Budget: ${{ totalBudget }}</p>
+          <p>Remaining Budget: ${{ remainingBudget }}</p>
+          <mat-progress-bar [value]="(remainingBudget / totalBudget) * 100"></mat-progress-bar>
+        </div>
+        <div>
+          <p>Starters Budget: ${{ startersBudget }}</p>
+          <p>Remaining Starters Budget: ${{ remainingStartersBudget }}</p>
+          <mat-progress-bar [value]="(remainingStartersBudget / startersBudget) * 100"></mat-progress-bar>
+        </div>
+      </div>
+
+      <h3 class="text-lg font-semibold mb-2">Position Spending</h3>
+      <div class="grid grid-cols-2 gap-4 mb-4">
+        <div *ngFor="let position of positions | keyvalue">
+          <label [for]="position.key" class="block font-medium">
+            {{ position.key }} (${{ position.value.min }}-${{ position.value.max }}):
+          </label>
+          <mat-form-field class="w-full">
+            <input matInput type="number" [id]="position.key" [(ngModel)]="positionInputs[position.key]">
+          </mat-form-field>
+          <p>Spent: ${{ position.value.spent }}</p>
+          <mat-progress-bar 
+            [value]="(position.value.spent / position.value.max) * 100"
+            [ngClass]="{
+              'bg-green-500': position.value.spent >= position.value.min && position.value.spent <= position.value.max,
+              'bg-red-500': position.value.spent < position.value.min,
+              'bg-orange-500': position.value.spent > position.value.max
+            }"
+          ></mat-progress-bar>
+        </div>
+      </div>
+
+      <button mat-raised-button color="primary" (click)="addPlayer()">Add Player</button>
+    </div>
+  </mat-tab>
+
+  <mat-tab label="League Overview">
+    <div class="p-4">
+      <h2 class="text-xl font-bold mb-4">League Overview</h2>
+      <button mat-raised-button color="primary" (click)="loadLeagueData()">Load League Data</button>
+
+      <table mat-table [dataSource]="leagueOverviewDataSource" class="w-full mt-4">
+        <ng-container matColumnDef="username">
+          <th mat-header-cell *matHeaderCellDef>Username</th>
+          <td mat-cell *matCellDef="let user">{{ user.display_name }}</td>
+        </ng-container>
+        <ng-container matColumnDef="totalSpent">
+          <th mat-header-cell *matHeaderCellDef>Total Spent</th>
+          <td mat-cell *matCellDef="let user">{{ user.totalSpent }}</td>
+        </ng-container>
+        <ng-container matColumnDef="startersSpent">
+          <th mat-header-cell *matHeaderCellDef>Starters Spent</th>
+          <td mat-cell *matCellDef="let user">{{ user.startersSpent }}</td>
+        </ng-container>
+        <ng-container matColumnDef="benchSpent">
+          <th mat-header-cell *matHeaderCellDef>Bench Spent</th>
+          <td mat-cell *matCellDef="let user">{{ user.benchSpent }}</td>
+        </ng-container>
+
+        <tr mat-header-row *matHeaderRowDef="leagueOverviewColumns"></tr>
+        <tr mat-row *matRowDef="let row; columns: leagueOverviewColumns;"></tr>
+      </table>
+    </div>
+  </mat-tab>
+
+  <mat-tab label="Draft Overview">
+    <div class="p-4">
+      <h2 class="text-xl font-bold mb-4">Draft Overview</h2>
+      <button mat-raised-button color="primary" (click)="loadDraftData()">Load Draft Data</button>
+
+      <table mat-table [dataSource]="draftPicksDataSource" class="w-full mt-4">
+        <ng-container matColumnDef="pickNumber">
+          <th mat-header-cell *matHeaderCellDef>Pick #</th>
+          <td mat-cell *matCellDef="let pick">{{ pick.pick_no }}</td>
+        </ng-container>
+        <ng-container matColumnDef="playerName">
+          <th mat-header-cell *matHeaderCellDef>Player</th>
+          <td mat-cell *matCellDef="let pick">{{ pick.metadata.first_name }} {{ pick.metadata.last_name }}</td>
+        </ng-container>
+        <ng-container matColumnDef="position">
+          <th mat-header-cell *matHeaderCellDef>Position</th>
+          <td mat-cell *matCellDef="let pick">{{ pick.metadata.position }}</td>
+        </ng-container>
+        <ng-container matColumnDef="team">
+          <th mat-header-cell *matHeaderCellDef>Team</th>
+          <td mat-cell *matCellDef="let pick">{{ pick.metadata.team }}</td>
+        </ng-container>
+
+        <tr mat-header-row *matHeaderRowDef="draftPicksColumns"></tr>
+        <tr mat-row *matRowDef="let row; columns: draftPicksColumns;"></tr>
+      </table>
+    </div>
+  </mat-tab>
+</mat-tab-group>
