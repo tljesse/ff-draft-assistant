@@ -12,6 +12,7 @@ import { SleeperService } from '@app/core/services/functions/sleeper/sleeper.ser
 import { forkJoin, Subject, takeUntil } from 'rxjs';
 import { LeagueUser } from '@app/core/models/sleeper/league-user.model';
 import { DraftPick } from '@app/core/models/sleeper/draft-pick.model';
+import { environment } from '@env/environment';
 
 @Component({
   selector: 'app-auction-draft-tracker',
@@ -89,7 +90,7 @@ export class AuctionDraftTrackerComponent implements OnInit, OnDestroy {
 
   loadLeagueData() {
     console.log('load league');
-    const leagueId = '1118048781913653248';
+    const leagueId = environment.sleeper.league_id;
     this.sleeperService.getLeagueUsers(leagueId).pipe(
       takeUntil(this.destroy$)
     ).subscribe({
@@ -114,7 +115,7 @@ export class AuctionDraftTrackerComponent implements OnInit, OnDestroy {
   }
 
   loadDraftData() {
-    const draftId = '1118048781913653249';
+    const draftId = environment.sleeper.draft_id;
     this.sleeperService.getDraftPicks(draftId).pipe(
       takeUntil(this.destroy$)
     ).subscribe({
