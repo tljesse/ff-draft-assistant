@@ -1,0 +1,64 @@
+<div class="form-container m-auto relative" [class.loading]="loggingIn">
+  <mat-spinner *ngIf="loggingIn"></mat-spinner>
+
+  <img src="assets/logo/mdd-logo.svg" alt="Logo" class="logo">
+
+  <div *ngIf="showLoginForm" class="form-content p-4">
+    <h2 class="text-center mb-4">Login</h2>
+    <form [formGroup]="loginForm" (ngSubmit)="onLogin()">
+      <mat-form-field appearance="fill">
+        <mat-label>Email</mat-label>
+        <input matInput type="email" formControlName="email">
+      </mat-form-field>
+      <mat-form-field appearance="fill">
+        <mat-label>Password</mat-label>
+        <input matInput [type]="showLoginPassword ? 'text' : 'password'" formControlName="password">
+        <button mat-icon-button matSuffix type="button" (click)="toggleLoginPasswordVisibility()">
+          <mat-icon>{{showLoginPassword ? 'visibility_off' : 'visibility'}}</mat-icon>
+        </button>
+      </mat-form-field>
+      <button mat-raised-button color="primary" type="submit">Login</button>
+      <button mat-button color="primary" type="button" (click)="onForgotPassword()">Forgot Password</button>
+    </form>
+  </div>
+
+  <div *ngIf="!showLoginForm" class="form-content p-4">
+    <h2 class="text-center mb-4">Register</h2>
+    <form [formGroup]="registerForm" (ngSubmit)="onRegister()">
+      <mat-form-field appearance="fill">
+        <mat-label>First Name</mat-label>
+        <input matInput type="text" formControlName="firstName">
+        <!-- <mat-error *ngIf="registerForm.get('firstName').hasError('required')">Required</mat-error> -->
+      </mat-form-field>
+      <mat-form-field appearance="fill">
+        <mat-label>Last Name</mat-label>
+        <input matInput type="text" formControlName="lastName">
+        <!-- <mat-error *ngIf="registerForm.get('lastName').hasError('required')">Required</mat-error> -->
+      </mat-form-field>
+      <mat-form-field appearance="fill">
+        <mat-label>Email</mat-label>
+        <input matInput type="email" formControlName="email">
+        <!-- <mat-error *ngIf="registerForm.get('email').hasError('email')">Must be a valid email</mat-error>
+        <mat-error *ngIf="registerForm.get('email').hasError('required')">Required</mat-error> -->
+      </mat-form-field>
+      <mat-form-field appearance="fill">
+        <mat-label>Password</mat-label>
+        <input matInput [type]="showRegisterPassword ? 'text' : 'password'" formControlName="password">
+        <button mat-icon-button matSuffix type="button" (click)="toggleRegisterPasswordVisibility()">
+          <mat-icon>{{showRegisterPassword ? 'visibility_off' : 'visibility'}}</mat-icon>
+        </button>
+        <!-- <mat-error *ngIf="registerForm.get('password').hasError('required')">Required</mat-error> -->
+      </mat-form-field>
+
+      <mat-checkbox class="mb-4" formControlName="agreed">
+        I agree to the <a target="_blank" class="underline" href="">Terms of Service</a> and <a target="_blank" class="underline" href="">Privacy Policy</a>
+      </mat-checkbox>
+
+      <button mat-raised-button color="primary" type="submit" [disabled]="registerForm.invalid">Register</button>
+    </form>
+  </div>
+
+  <button mat-button color="primary" class="mt-4 w-full" (click)="toggleForm()">
+    {{ showLoginForm ? 'Create an Account' : 'Already Have an Account? Sign In' }}
+  </button>
+</div>
